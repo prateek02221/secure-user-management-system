@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Register</h2>
+
+  <!-- NOTE: no form tag -->
+  <input type="text" id="name" placeholder="Full Name" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+
+  <!-- IMPORTANT: type="button" -->
+  <button type="button" onclick="register()">Register</button>
+
+  <div class="link">
+    <a href="login.html">Already have an account?</a>
+  </div>
+
+  <p id="msg" style="margin-top:10px;color:red;"></p>
+</div>
+
+<script>
+function register() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!name || !email || !password) {
+    document.getElementById("msg").innerText = "All fields are required";
+    return;
+  }
+
+  fetch("http://localhost:8080/api/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      password: password
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Registration failed");
+    return res.text();
+  })
+  .then(data => {
+    alert(data);
+    window.location.href = "login.html";
+  })
+  .catch(err => {
+    document.getElementById("msg").innerText = err.message;
+  });
+}
+</script>
+
+</body>
+</html>

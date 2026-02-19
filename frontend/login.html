@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Login</h2>
+
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+
+  <button onclick="login()">Login</button>
+
+  <div class="link">
+    <a href="register.html">Create new account</a>
+  </div>
+</div>
+
+<script>
+function login() {
+  fetch("http://localhost:8080/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    localStorage.setItem("token", data.token);
+
+    if (data.role === "ROLE_ADMIN")
+      window.location.href = "admin.html";
+    else
+      window.location.href = "user.html";
+  })
+  .catch(() => alert("Invalid credentials"));
+}
+</script>
+
+</body>
+</html>
